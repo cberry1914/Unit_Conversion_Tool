@@ -1,0 +1,12 @@
+{
+  "name": "science-unit-converter-web",
+  "version": "1.0.0",
+  "description": "Static web unit-conversion grading tool (Temperature + Volume) for AWS S3 static hosting",
+  "private": true,
+  "scripts": {
+    "test": "jest --colors=false"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

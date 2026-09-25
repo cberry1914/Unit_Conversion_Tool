@@ -1,0 +1,45 @@
+name: Java App CI
+
+# The Java tool is for LOCAL deployment (a peer downloads and runs it
+# themselves), so there's nothing to deploy here — this workflow's job is to
+# prove, on every push and pull request, that the code still compiles and all
+# tests still pass before a peer ever pulls it down.
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "java-local/**"
+      - ".github/workflows/java-ci.yml"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "java-local/**"
+      - ".github/workflows/java-ci.yml"
+
+defaults:
+  run:
+    working-directory: java-local
+
+jobs:
+  build-and-test:
+    name: Build and test (Maven)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+
+      - name: Build and run tests
+        run: mvn -B verify
+
+      - name: Upload the runnable jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-converter-jar
+          path: java-local/target/unit-converter.jar

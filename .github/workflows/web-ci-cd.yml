@@ -1,0 +1,70 @@
+name: Web App CI/CD
+
+# Runs automatically:
+#   - "pull_request" jobs run the test job only (a safety check before merging)
+#   - "push" to main runs tests AND deploys to S3, but only if tests pass
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "web-js/**"
+      - ".github/workflows/web-ci-cd.yml"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "web-js/**"
+      - ".github/workflows/web-ci-cd.yml"
+
+defaults:
+  run:
+    working-directory: web-js
+
+jobs:
+  test:
+    name: Run Jest tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: web-js/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+  deploy:
+    name: Deploy to S3
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Sync web-js/ to the S3 bucket
+        run: |
+          aws s3 sync . "s3://${{ secrets.S3_BUCKET_NAME }}" \
+            --delete \
+            --exclude "node_modules/*" \
+            --exclude "tests/*" \
+            --exclude "package*.json"
+
+      - name: Show the site URL
+        run: |
+          echo "Deployed. If static website hosting is enabled on the bucket, it is served at:"
+          echo "http://${{ secrets.S3_BUCKET_NAME }}.s3-website-${{ secrets.AWS_REGION }}.amazonaws.com"
