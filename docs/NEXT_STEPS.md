@@ -46,3 +46,6 @@ A more polished version would validate the input value field as the teacher
 types (not just on submit), disable the "Check Answer" button until the form
 is valid, and give each field its own inline error state — closer to what a
 production-quality form would offer a teacher using this daily.
+
+
+"What happens with a negative volume, or 0 Kelvin, or a Rankine value below absolute zero?" — nothing currently stops nonsensical-but-numeric physical inputs; likely flagged as a gap.

@@ -13,19 +13,19 @@ Both implementations use the same internal split:
 
 ```
 ┌─────────────────────┐        ┌─────────────────────┐
-│   Interface layer    │        │   Interface layer    │
-│  (app.js / MainGUI)  │        │                       │
-│  reads the form,      │        │  reads the form,      │
-│  calls the engine,    │        │  calls the engine,    │
-│  writes the result    │        │  writes the result    │
-└──────────┬───────────┘        └──────────┬───────────┘
-           │                                │
-           ▼                                ▼
+│   Interface layer   │        │   Interface layer   │
+│  (app.js / MainGUI) │        │                     │
+│  reads the form,    │        │  reads the form,    │
+│  calls the engine,  │        │  calls the engine,  │
+│  writes the result  │        │  writes the result  │
+└──────────┬──────────┘        └──────────┬──────────┘
+           │                              │
+           ▼                              ▼
 ┌─────────────────────────────────────────────────────┐
-│              Logic layer (pure, no UI code)           │
-│   Unit categories · conversion math · grading rule     │
-│   web-js/js/converter.js    java-local/.../Conversion-  │
-│                              Engine.java + Grader.java   │
+│            Logic layer (pure, no UI code)           │
+│Unit categories · conversion math · grading rule     │
+│web-js/js/converter.js    java-local/.../Conversion- │
+│              Engine.java + Grader.java              │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -55,14 +55,14 @@ a one-line addition (see `docs/NEXT_STEPS.md`), not a combinatorial one.
 
 Volume unit factors are **US customary** definitions:
 
-| Unit | Liters |
-|---|---|
-| Liter | 1 |
-| Tablespoon (US) | 0.0147867648 |
-| Cubic inch | 0.016387064 |
-| Cup (US) | 0.2365882365 |
-| Cubic foot | 28.316846592 |
-| Gallon (US) | 3.785411784 |
+| Unit             | Liters       |
+|------------------|--------------|
+| Liter            | 1            |
+| Tablespoon (US)  | 0.0147867648 |
+| Cubic inch       | 0.016387064  |
+| Cup (US)         | 0.2365882365 |
+| Cubic foot       | 28.316846592 |
+| Gallon (US)      | 3.785411784  |
 
 ## Preventing invalid unit pairs structurally, not just by validation
 
